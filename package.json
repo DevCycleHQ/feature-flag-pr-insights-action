@@ -1,0 +1,22 @@
+{
+  "name": "variable-diff-action",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "yarn install && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevCycleHQ/variable-diff-action.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DevCycleHQ/variable-diff-action/issues"
+  },
+  "homepage": "https://github.com/DevCycleHQ/variable-diff-action#readme",
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
+}

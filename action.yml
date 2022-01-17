@@ -1,0 +1,13 @@
+name: DevCycle variable diff action
+description: A GitHub Action for generating a summary of changes to DevCycle variables.
+author: DevCycle
+inputs:
+  client_id:
+    description: "Your DevCycle client ID"
+    required: true
+  client_secret:
+    description: "Your DevCycle client secret"
+    required: true
+runs:
+  using: "node12"
+  main: "lib/main.js"
