@@ -12,5 +12,5 @@ inputs:
     description: "The GitHub token for your repo"
     required: true
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: node12
+  main: dist/index.js
