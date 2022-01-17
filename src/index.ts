@@ -23,7 +23,6 @@ async function run() {
         return
     }
 
-    console.log('------- Try posting comment')
     try {
         await octokit.pulls.createReviewComment({
             owner,

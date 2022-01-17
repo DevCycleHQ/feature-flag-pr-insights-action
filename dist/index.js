@@ -36,7 +36,6 @@ function run() {
             core.warning('Requires a pull request');
             return;
         }
-        console.log('------- Try posting comment');
         try {
             yield octokit.pulls.createReviewComment({
                 owner,
