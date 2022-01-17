@@ -2,11 +2,14 @@ const github = require('@actions/github')
 const core = require('@actions/core')
 
 const { owner, repo } = github.context.repo
-const token = core.getInput('repo-token')
+const token = core.getInput('github-token')
 const octokit = token && github.getOctokit(token)
 
 async function run() {
-    console.log('------- Running comment action', token, octokit)
+    if (!token) {
+        core.warning('Missing github token')
+        return
+    }
 
     if (!octokit) {
         core.warning('No octokit client')
