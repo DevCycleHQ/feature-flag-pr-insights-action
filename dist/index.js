@@ -18,14 +18,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const github = __nccwpck_require__(5438);
 const core = __nccwpck_require__(2186);
 const { owner, repo } = github.context.repo;
-const token = core.getInput('repo-token');
+const token = core.getInput('github-token');
 const octokit = token && github.getOctokit(token);
 function run() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('------- Running comment action', token, octokit);
+        if (!token) {
+            core.setFailed('Missing github token');
+            return;
+        }
+        console.log('TOKEN: ' + token);
         if (!octokit) {
-            core.warning('No octokit client');
+            core.setFailed('No octokit client');
             return;
         }
         if (!github.context.payload.pull_request) {

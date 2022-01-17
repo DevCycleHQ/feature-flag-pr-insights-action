@@ -7,12 +7,14 @@ const octokit = token && github.getOctokit(token)
 
 async function run() {
     if (!token) {
-        core.warning('Missing github token')
+        core.setFailed('Missing github token')
         return
     }
 
+    console.log('TOKEN: ' + token)
+
     if (!octokit) {
-        core.warning('No octokit client')
+        core.setFailed('No octokit client')
         return
     }
 
