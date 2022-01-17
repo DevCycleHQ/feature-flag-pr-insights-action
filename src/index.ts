@@ -6,16 +6,19 @@ const token = core.getInput('repo-token')
 const octokit = token && github.getOctokit(token)
 
 async function run() {
-    if (!octokit) {
-        core.debug('No octokit client')
-        return;
-    }
+    console.log('------- Running comment action', token, octokit)
 
-    if (!github.context.payload.pull_request) {
-        core.debug('Requires a pull request')
+    if (!octokit) {
+        core.warning('No octokit client')
         return
     }
 
+    if (!github.context.payload.pull_request) {
+        core.warning('Requires a pull request')
+        return
+    }
+
+    console.log('------- Try posting comment')
     try {
         await octokit.pulls.createReviewComment({
             owner,

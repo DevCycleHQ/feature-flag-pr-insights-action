@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 9283:
+/***/ 4822:
 /***/ (function(__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) {
 
 "use strict";
@@ -23,14 +23,16 @@ const octokit = token && github.getOctokit(token);
 function run() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
+        console.log('------- Running comment action', token, octokit);
         if (!octokit) {
-            core.debug('No octokit client');
+            core.warning('No octokit client');
             return;
         }
         if (!github.context.payload.pull_request) {
-            core.debug('Requires a pull request');
+            core.warning('Requires a pull request');
             return;
         }
+        console.log('------- Try posting comment');
         try {
             yield octokit.pulls.createReviewComment({
                 owner,
@@ -8518,7 +8520,7 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(9283);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(4822);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()
