@@ -9,5 +9,5 @@ inputs:
     description: "Your DevCycle client secret"
     required: true
 runs:
-  using: "node12"
-  main: "lib/main.js"
+  using: 'docker'
+  image: 'Dockerfile'
