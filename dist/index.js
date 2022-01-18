@@ -2,10 +2,29 @@
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 4822:
-/***/ (function(__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -15,8 +34,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const github = __nccwpck_require__(5438);
-const core = __nccwpck_require__(2186);
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const github = __importStar(__nccwpck_require__(5438));
+const core = __importStar(__nccwpck_require__(2186));
 const { owner, repo } = github.context.repo;
 const token = core.getInput('github-token');
 const octokit = token && github.getOctokit(token);
@@ -35,14 +55,33 @@ function run() {
             core.warning('Requires a pull request');
             return;
         }
-        console.log(JSON.stringify(github.context.payload));
+        const pullRequestNumber = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number;
+        const commentIdentifier = 'Hello world';
         try {
-            yield octokit.rest.issues.createComment({
+            const existingComments = yield octokit.rest.issues.listComments({
                 owner,
                 repo,
-                issue_number: (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number,
-                body: 'Hello world'
+                issue_number: pullRequestNumber,
             });
+            const commentToUpdate = existingComments === null || existingComments === void 0 ? void 0 : existingComments.data.find((comment) => (comment.user.login === 'github-actions[bot]' &&
+                comment.body.includes(commentIdentifier)));
+            const commentBody = `${commentIdentifier} ${new Date()}`;
+            if (commentToUpdate) {
+                yield octokit.rest.issues.updateComment({
+                    owner,
+                    repo,
+                    comment_id: commentToUpdate.id,
+                    body: commentBody
+                });
+            }
+            else {
+                yield octokit.rest.issues.createComment({
+                    owner,
+                    repo,
+                    issue_number: pullRequestNumber,
+                    body: commentBody
+                });
+            }
         }
         catch (err) {
             core.error(err);

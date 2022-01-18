@@ -1,5 +1,5 @@
-const github = require('@actions/github')
-const core = require('@actions/core')
+import * as github from '@actions/github'
+import * as core from '@actions/core'
 
 const { owner, repo } = github.context.repo
 const token = core.getInput('github-token')
@@ -21,16 +21,38 @@ async function run() {
         return
     }
 
-    console.log(JSON.stringify(github.context.payload))
+    const pullRequestNumber = github.context.payload.pull_request?.number
+    const commentIdentifier = 'Hello world'
 
     try {
-        await octokit.rest.issues.createComment({
+        const existingComments = await octokit.rest.issues.listComments({
             owner,
             repo,
-            issue_number: github.context.payload.pull_request?.number,
-            body: 'Hello world'
+            issue_number: pullRequestNumber,
         })
-    } catch (err) {
+
+        const commentToUpdate = existingComments?.data.find((comment: any) => (
+            comment.user.login === 'github-actions[bot]' &&
+            comment.body.includes(commentIdentifier)
+        ))
+
+        const commentBody = `${commentIdentifier} ${new Date()}`
+        if (commentToUpdate) {
+            await octokit.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: commentToUpdate.id,
+                body: commentBody
+            })
+        } else {
+            await octokit.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: pullRequestNumber,
+                body: commentBody
+            })
+        }
+    } catch (err: any) {
         core.error(err)
         throw err
     }
