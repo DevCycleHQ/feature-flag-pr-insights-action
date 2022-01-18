@@ -27,7 +27,6 @@ function run() {
             core.setFailed('Missing github token');
             return;
         }
-        console.log('TOKEN: ' + token);
         if (!octokit) {
             core.setFailed('No octokit client');
             return;
@@ -36,11 +35,12 @@ function run() {
             core.warning('Requires a pull request');
             return;
         }
+        console.log(JSON.stringify(github.context.payload));
         try {
-            yield octokit.pulls.createReviewComment({
+            yield octokit.rest.issues.createComment({
                 owner,
                 repo,
-                pull_number: (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number,
+                issue_number: (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number,
                 body: 'Hello world'
             });
         }

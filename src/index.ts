@@ -11,8 +11,6 @@ async function run() {
         return
     }
 
-    console.log('TOKEN: ' + token)
-
     if (!octokit) {
         core.setFailed('No octokit client')
         return
@@ -23,11 +21,13 @@ async function run() {
         return
     }
 
+    console.log(JSON.stringify(github.context.payload))
+
     try {
-        await octokit.pulls.createReviewComment({
+        await octokit.rest.issues.createComment({
             owner,
             repo,
-            pull_number: github.context.payload.pull_request?.number,
+            issue_number: github.context.payload.pull_request?.number,
             body: 'Hello world'
         })
     } catch (err) {
