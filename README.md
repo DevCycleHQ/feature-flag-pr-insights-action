@@ -7,12 +7,10 @@ on: pull_request
 jobs:
   dvc-variable-diff:
     runs-on: ubuntu-latest
-    name: Fetch DevCycle variable diff
+    name: Fetch DevCycle Variable Diff
     steps:
-      - uses: actions/checkout@v2
-        with:
-          repository: DevCycleHQ/variable-diff-action
-      - uses: ./
+      - uses: DevCycleHQ/variable-diff-action@v1.0.0
+        name: Execute DVC Action
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```

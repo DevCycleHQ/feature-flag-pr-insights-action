@@ -1,5 +1,6 @@
 import * as github from '@actions/github'
 import * as core from '@actions/core'
+import {exec, getExecOutput} from '@actions/exec'
 
 const { owner, repo } = github.context.repo
 const token = core.getInput('github-token')
@@ -21,8 +22,15 @@ async function run() {
         return
     }
 
+    const baseBranch = github.context.payload.pull_request.base.ref
+    const headBranch = github.context.payload.pull_request.head.ref
+
+    await exec('npm', ['install', '-g', '@devcycle/cli@1.0.1'])
+
+    const output = await getExecOutput('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`])
+
     const pullRequestNumber = github.context.payload.pull_request?.number
-    const commentIdentifier = 'Hello world'
+    const commentIdentifier = 'DevCycle Variable Changes'
 
     try {
         const existingComments = await octokit.rest.issues.listComments({
@@ -36,7 +44,7 @@ async function run() {
             comment.body.includes(commentIdentifier)
         ))
 
-        const commentBody = `${commentIdentifier} ${new Date()}`
+        const commentBody = `${output.stdout} \n\n Last Updated: ${(new Date()).toUTCString()}`
         if (commentToUpdate) {
             await octokit.rest.issues.updateComment({
                 owner,
