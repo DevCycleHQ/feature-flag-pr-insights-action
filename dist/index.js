@@ -41,7 +41,6 @@ const exec_1 = __nccwpck_require__(1514);
 const { owner, repo } = github.context.repo;
 const token = core.getInput('github-token');
 const octokit = token && github.getOctokit(token);
-// dvcClient.variable("my-variable")
 function run() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -71,7 +70,7 @@ function run() {
             });
             const commentToUpdate = existingComments === null || existingComments === void 0 ? void 0 : existingComments.data.find((comment) => (comment.user.login === 'github-actions[bot]' &&
                 comment.body.includes(commentIdentifier)));
-            const commentBody = `${output.stdout}`;
+            const commentBody = `${output.stdout} \n\n Last Updated: ${(new Date()).toUTCString()}`;
             if (commentToUpdate) {
                 yield octokit.rest.issues.updateComment({
                     owner,

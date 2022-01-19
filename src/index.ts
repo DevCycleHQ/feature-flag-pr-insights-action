@@ -6,8 +6,6 @@ const { owner, repo } = github.context.repo
 const token = core.getInput('github-token')
 const octokit = token && github.getOctokit(token)
 
-// dvcClient.variable("my-variable")
-
 async function run() {
     if (!token) {
         core.setFailed('Missing github token')
@@ -46,7 +44,7 @@ async function run() {
             comment.body.includes(commentIdentifier)
         ))
 
-        const commentBody = `${output.stdout}`
+        const commentBody = `${output.stdout} \n\n Last Updated: ${(new Date()).toUTCString()}`
         if (commentToUpdate) {
             await octokit.rest.issues.updateComment({
                 owner,
