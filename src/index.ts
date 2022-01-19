@@ -6,6 +6,8 @@ const { owner, repo } = github.context.repo
 const token = core.getInput('github-token')
 const octokit = token && github.getOctokit(token)
 
+// dvcClient.variable("my-variable")
+
 async function run() {
     if (!token) {
         core.setFailed('Missing github token')

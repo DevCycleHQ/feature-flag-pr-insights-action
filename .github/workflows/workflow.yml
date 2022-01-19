@@ -1,14 +1,17 @@
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
-  test:
+  dvc-variable-diff:
     runs-on: ubuntu-latest
-    name: Run action
+    name: Fetch DevCycle variable diff
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: DevCycleHQ/variable-diff-action@add-cli
-        name: Execute DVC Action
+      - uses: actions/checkout@v2
+        with:
+          repository: DevCycleHQ/variable-diff-action
+          ref: ${{ github.sha }}
+      - uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
