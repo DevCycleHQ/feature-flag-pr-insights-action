@@ -1,0 +1,14 @@
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Run action
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: DevCycleHQ/variable-diff-action@add-cli
+        name: Execute DVC Action
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
