@@ -58,7 +58,7 @@ function run() {
         }
         const baseBranch = github.context.payload.pull_request.base.ref;
         const headBranch = github.context.payload.pull_request.head.ref;
-        yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@1.0.2']);
+        yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@1.0.5']);
         const output = yield (0, exec_1.getExecOutput)('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`]);
         const pullRequestNumber = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number;
         const commentIdentifier = 'DevCycle Variable Changes';
