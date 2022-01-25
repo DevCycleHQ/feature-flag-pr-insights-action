@@ -1,13 +1,10 @@
-name: DevCycle variable diff action
-description: A GitHub Action for generating a summary of changes to DevCycle variables.
-author: DevCycle
+name: DevCycle Feature Flag Insights for Pull Requests
+description: Identifies changes in DevCycle Feature Flags within a PR, adds a comment to your PRs.
+author: DevCycleHQ
+branding:
+  color: blue
+  icon: flag
 inputs:
-  client-id:
-    description: "Your DevCycle client ID"
-    required: true
-  client-secret:
-    description: "Your DevCycle client secret"
-    required: true
   github-token:
     description: "The GitHub token for your repo"
     required: true
