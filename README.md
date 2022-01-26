@@ -4,14 +4,16 @@ With this Github action, information on which [DevCycle](https://devcycle.com/) 
 Note: This is intended for `pull_request` workflow events
 
 ## Usage
+Create a new Actions workflow in your GitHub repository (e.g. devcycle-insights.yml) in the .github/workflows directory. In your new file, paste the following code:
+
 ```yaml
 on: pull_request
 
 jobs:
-  dvc-variable-diff:
+  dvc-feature-flag-insights:
     runs-on: ubuntu-latest
     steps:
-      - uses: DevCycleHQ/variable-diff-action@v1.0.0
+      - uses: DevCycleHQ/feature-flag-pr-insights-action@v1.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
