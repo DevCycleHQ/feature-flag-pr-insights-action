@@ -3,6 +3,9 @@ With this Github action, information on which [DevCycle](https://devcycle.com/) 
 
 Note: This is intended for `pull_request` workflow events
 
+## Example Output
+
+![Example output](./example_ouput.png)
 ## Usage
 Create a new Actions workflow in your GitHub repository (e.g. devcycle-insights.yml) in the .github/workflows directory. In your new file, paste the following code:
 
