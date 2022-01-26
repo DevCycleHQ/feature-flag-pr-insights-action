@@ -25,7 +25,7 @@ async function run() {
     const baseBranch = github.context.payload.pull_request.base.ref
     const headBranch = github.context.payload.pull_request.head.ref
 
-    await exec('npm', ['install', '-g', '@devcycle/cli@1.0.5'])
+    await exec('npm', ['install', '-g', '@devcycle/cli@1.0.7'])
 
     const output = await getExecOutput('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`])
 
