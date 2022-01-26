@@ -15,10 +15,15 @@ on: pull_request
 jobs:
   dvc-feature-flag-insights:
     runs-on: ubuntu-latest
+    name: Generate DevCycle PR Insights
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: DevCycleHQ/feature-flag-pr-insights-action@v1.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
 ```
 
 ## Inputs
