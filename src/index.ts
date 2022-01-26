@@ -1,10 +1,44 @@
 import * as github from '@actions/github'
 import * as core from '@actions/core'
 import {exec, getExecOutput} from '@actions/exec'
+import md5 from 'md5'
 
 const { owner, repo } = github.context.repo
 const token = core.getInput('github-token')
 const octokit = token && github.getOctokit(token)
+const dvcClient: any = {variable: () => {}}
+
+const test = true
+
+dvcClient.variable("test", test)
+
+function formatLinks(output: string): string {
+    const singleLines = output.matchAll(/Location: (.*)\s*/g)
+    const multiLines = output.matchAll(/- ([^:]*):(.*)\n/g)
+    const lines = [...singleLines, ...multiLines]
+
+    const prUrl = github.context.payload.pull_request?.html_url
+    if (!prUrl) return output
+
+    console.log("MATCH", lines[0])
+
+    let newOutput = output
+    const checkDuplicates: Record<string, boolean> = {}
+    for (const [text, fileName, lineNumber] of lines) {
+        if (checkDuplicates[text]) continue
+        console.log('matched on', text)
+        const fullPath = `${fileName}:${lineNumber}`
+        console.log('replacing', fullPath)
+
+        newOutput = newOutput.replace(
+            new RegExp(fullPath, 'g'),
+            `[${fullPath}](${prUrl}/files#diff-${md5(fileName)}R${lineNumber.replace("L", "")})`
+        )
+        checkDuplicates[text] = true
+    }
+
+    return newOutput.replace(/\t/g, '    ')
+}
 
 async function run() {
     if (!token) {
@@ -44,7 +78,8 @@ async function run() {
             comment.body.includes(commentIdentifier)
         ))
 
-        const commentBody = `${output.stdout} \n\n Last Updated: ${(new Date()).toUTCString()}`
+        const commentBody = `${formatLinks(output.stdout)} \n\n Last Updated: ${(new Date()).toUTCString()}`
+
         if (commentToUpdate) {
             await octokit.rest.issues.updateComment({
                 owner,
