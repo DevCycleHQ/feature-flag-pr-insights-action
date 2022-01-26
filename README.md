@@ -1,5 +1,5 @@
-# `feature-flag-pr-insights-action`
-Identifies changes in DevCycle Feature Flags within a PR, adds a comment to your PRs.
+# DevCycle Feature Flag Insights for Pull Requests
+With this Github action, information on which [DevCycle](https://devcycle.com/) features have been added or removed in a code change will be shown directly on each Pull Request as a comment.
 
 Note: This is intended for `pull_request` workflow events
 
