@@ -1,6 +1,6 @@
 import * as github from '@actions/github'
 import * as core from '@actions/core'
-import {exec, getExecOutput} from '@actions/exec'
+import { exec, getExecOutput } from '@actions/exec'
 import md5 from 'md5'
 import { sha256 } from 'js-sha256'
 
@@ -13,15 +13,13 @@ const test = true
 
 dvcClient.variable(test, "test", test)
 
-function formatLinks(output: string): string {
-    const singleLines = output.matchAll(/Location: ([^:]*):L(.*)\n*/g)
-    const multiLines = output.matchAll(/- ([^:]*):L(.*)\n/g)
+function formatSection(content: string, url: string, mode: 'add' | 'remove'): string {
+    const singleLines = content.matchAll(/Location: ([^:]*):L(.*)\n*/g)
+    const multiLines = content.matchAll(/- ([^:]*):L(.*)\n/g)
     const lines = [...singleLines, ...multiLines]
 
-    const prUrl = github.context.payload.pull_request?.html_url
-    if (!prUrl) return output
-    
-    let newOutput = output
+
+    let newOutput = content
     const checkDuplicates: Record<string, boolean> = {}
     for (const [text, fileName, lineNumber] of lines) {
         if (checkDuplicates[text] || !fileName || !lineNumber) continue
@@ -29,13 +27,24 @@ function formatLinks(output: string): string {
 
         newOutput = newOutput.replace(
             new RegExp(fullPath, 'g'),
-            `[${fullPath}](${prUrl}/files#diff-${sha256(fileName)}R${lineNumber})`
+            `[${fullPath}](${url}/files#diff-${sha256(fileName)}${mode === 'add' ? 'R' : 'L'}${lineNumber})`
         )
         checkDuplicates[text] = true
     }
 
     return newOutput.replace(/\t/g, '  ')
 }
+
+function formatLinks(output: string): string {
+    const prUrl = github.context.payload.pull_request?.html_url
+    if (!prUrl) return output
+
+    const [additions, removals] = output.split('❌ Removed')
+    if (!additions || !removals) return output
+
+    return `${formatSection(additions, prUrl, 'add')}❌ Removed${formatSection(removals, prUrl, 'remove')}`
+}
+
 
 async function run() {
     if (!token) {

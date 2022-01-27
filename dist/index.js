@@ -45,24 +45,30 @@ const octokit = token && github.getOctokit(token);
 const dvcClient = { variable: () => { } };
 const test = true;
 dvcClient.variable(test, "test", test);
-function formatLinks(output) {
-    var _a;
-    const singleLines = output.matchAll(/Location: ([^:]*):L(.*)\n*/g);
-    const multiLines = output.matchAll(/- ([^:]*):L(.*)\n/g);
+function formatSection(content, url, mode) {
+    const singleLines = content.matchAll(/Location: ([^:]*):L(.*)\n*/g);
+    const multiLines = content.matchAll(/- ([^:]*):L(.*)\n/g);
     const lines = [...singleLines, ...multiLines];
-    const prUrl = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.html_url;
-    if (!prUrl)
-        return output;
-    let newOutput = output;
+    let newOutput = content;
     const checkDuplicates = {};
     for (const [text, fileName, lineNumber] of lines) {
         if (checkDuplicates[text] || !fileName || !lineNumber)
             continue;
         const fullPath = `${fileName}:L${lineNumber}`;
-        newOutput = newOutput.replace(new RegExp(fullPath, 'g'), `[${fullPath}](${prUrl}/files#diff-${(0, js_sha256_1.sha256)(fileName)}R${lineNumber})`);
+        newOutput = newOutput.replace(new RegExp(fullPath, 'g'), `[${fullPath}](${url}/files#diff-${(0, js_sha256_1.sha256)(fileName)}${mode === 'add' ? 'R' : 'L'}${lineNumber})`);
         checkDuplicates[text] = true;
     }
     return newOutput.replace(/\t/g, '  ');
+}
+function formatLinks(output) {
+    var _a;
+    const prUrl = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.html_url;
+    if (!prUrl)
+        return output;
+    const [additions, removals] = output.split('❌ Removed');
+    if (!additions || !removals)
+        return output;
+    return `${formatSection(additions, prUrl, 'add')}❌ Removed${formatSection(removals, prUrl, 'remove')}`;
 }
 function run() {
     var _a;
