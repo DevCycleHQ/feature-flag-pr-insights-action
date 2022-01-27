@@ -1,4 +1,4 @@
-# DevCycle Feature Flag Insights for Pull Requests
+# Overview
 With this Github action, information on which [DevCycle](https://devcycle.com/) features have been added or removed in a code change will be shown directly on each Pull Request as a comment.
 
 Note: This is intended for `pull_request` workflow events
