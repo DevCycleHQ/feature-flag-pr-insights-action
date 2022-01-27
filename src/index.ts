@@ -2,6 +2,7 @@ import * as github from '@actions/github'
 import * as core from '@actions/core'
 import {exec, getExecOutput} from '@actions/exec'
 import md5 from 'md5'
+import { sha256 } from 'js-sha256'
 
 const { owner, repo } = github.context.repo
 const token = core.getInput('github-token')
@@ -10,7 +11,7 @@ const dvcClient: any = {variable: () => {}}
 
 const test = true
 
-dvcClient.variable("test", test)
+dvcClient.variable(test, "test", test)
 
 function formatLinks(output: string): string {
     const singleLines = output.matchAll(/Location: (.*)\s*/g)
@@ -20,24 +21,20 @@ function formatLinks(output: string): string {
     const prUrl = github.context.payload.pull_request?.html_url
     if (!prUrl) return output
 
-    console.log("MATCH", lines[0])
-
     let newOutput = output
     const checkDuplicates: Record<string, boolean> = {}
     for (const [text, fileName, lineNumber] of lines) {
         if (checkDuplicates[text]) continue
-        console.log('matched on', text)
         const fullPath = `${fileName}:${lineNumber}`
-        console.log('replacing', fullPath)
 
         newOutput = newOutput.replace(
             new RegExp(fullPath, 'g'),
-            `[${fullPath}](${prUrl}/files#diff-${md5(fileName)}R${lineNumber.replace("L", "")})`
+            `[${fullPath}](${prUrl}/files#diff-${sha256(fileName)}R${lineNumber.replace("L", "")})`
         )
         checkDuplicates[text] = true
     }
 
-    return newOutput.replace(/\t/g, '    ')
+    return newOutput.replace(/\t/g, '  ')
 }
 
 async function run() {
