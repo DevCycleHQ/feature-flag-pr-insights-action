@@ -25,9 +25,12 @@ async function run() {
     const baseBranch = github.context.payload.pull_request.base.ref
     const headBranch = github.context.payload.pull_request.head.ref
 
-    await exec('npm', ['install', '-g', '@devcycle/cli@1.0.7'])
+    await exec('npm', ['install', '-g', '@devcycle/cli@1.0.8'])
 
-    const output = await getExecOutput('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`])
+    const prLink = github.context.payload.pull_request?.html_url
+    const prLinkArgs = prLink ? ['--pr-link', prLink] : []
+
+    const output = await getExecOutput('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`, ...prLinkArgs])
 
     const pullRequestNumber = github.context.payload.pull_request?.number
     const commentIdentifier = 'DevCycle Variable Changes'

@@ -42,7 +42,7 @@ const { owner, repo } = github.context.repo;
 const token = core.getInput('github-token');
 const octokit = token && github.getOctokit(token);
 function run() {
-    var _a;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         if (!token) {
             core.setFailed('Missing github token');
@@ -58,9 +58,11 @@ function run() {
         }
         const baseBranch = github.context.payload.pull_request.base.ref;
         const headBranch = github.context.payload.pull_request.head.ref;
-        yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@1.0.7']);
-        const output = yield (0, exec_1.getExecOutput)('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`]);
-        const pullRequestNumber = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number;
+        yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@1.0.8']);
+        const prLink = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.html_url;
+        const prLinkArgs = prLink ? ['--pr-link', prLink] : [];
+        const output = yield (0, exec_1.getExecOutput)('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`, ...prLinkArgs]);
+        const pullRequestNumber = (_b = github.context.payload.pull_request) === null || _b === void 0 ? void 0 : _b.number;
         const commentIdentifier = 'DevCycle Variable Changes';
         try {
             const existingComments = yield octokit.rest.issues.listComments({
