@@ -47,8 +47,8 @@ const test = true;
 dvcClient.variable(test, "test", test);
 function formatLinks(output) {
     var _a;
-    const singleLines = output.matchAll(/Location: (.*)\s*/g);
-    const multiLines = output.matchAll(/- ([^:]*):(.*)\n/g);
+    const singleLines = output.matchAll(/Location: ([^:]*):L(.*)\n*/g);
+    const multiLines = output.matchAll(/- ([^:]*):L(.*)\n/g);
     const lines = [...singleLines, ...multiLines];
     const prUrl = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.html_url;
     if (!prUrl)
@@ -56,10 +56,10 @@ function formatLinks(output) {
     let newOutput = output;
     const checkDuplicates = {};
     for (const [text, fileName, lineNumber] of lines) {
-        if (checkDuplicates[text])
+        if (checkDuplicates[text] || !fileName || !lineNumber)
             continue;
-        const fullPath = `${fileName}:${lineNumber}`;
-        newOutput = newOutput.replace(new RegExp(fullPath, 'g'), `[${fullPath}](${prUrl}/files#diff-${(0, js_sha256_1.sha256)(fileName)}R${lineNumber.replace("L", "")})`);
+        const fullPath = `${fileName}:L${lineNumber}`;
+        newOutput = newOutput.replace(new RegExp(fullPath, 'g'), `[${fullPath}](${prUrl}/files#diff-${(0, js_sha256_1.sha256)(fileName)}R${lineNumber})`);
         checkDuplicates[text] = true;
     }
     return newOutput.replace(/\t/g, '  ');

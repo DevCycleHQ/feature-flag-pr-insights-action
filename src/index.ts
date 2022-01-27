@@ -14,22 +14,22 @@ const test = true
 dvcClient.variable(test, "test", test)
 
 function formatLinks(output: string): string {
-    const singleLines = output.matchAll(/Location: (.*)\s*/g)
-    const multiLines = output.matchAll(/- ([^:]*):(.*)\n/g)
+    const singleLines = output.matchAll(/Location: ([^:]*):L(.*)\n*/g)
+    const multiLines = output.matchAll(/- ([^:]*):L(.*)\n/g)
     const lines = [...singleLines, ...multiLines]
 
     const prUrl = github.context.payload.pull_request?.html_url
     if (!prUrl) return output
-
+    
     let newOutput = output
     const checkDuplicates: Record<string, boolean> = {}
     for (const [text, fileName, lineNumber] of lines) {
-        if (checkDuplicates[text]) continue
-        const fullPath = `${fileName}:${lineNumber}`
+        if (checkDuplicates[text] || !fileName || !lineNumber) continue
+        const fullPath = `${fileName}:L${lineNumber}`
 
         newOutput = newOutput.replace(
             new RegExp(fullPath, 'g'),
-            `[${fullPath}](${prUrl}/files#diff-${sha256(fileName)}R${lineNumber.replace("L", "")})`
+            `[${fullPath}](${prUrl}/files#diff-${sha256(fileName)}R${lineNumber})`
         )
         checkDuplicates[text] = true
     }
