@@ -3,7 +3,10 @@ import * as core from '@actions/core'
 import {exec, getExecOutput} from '@actions/exec'
 
 const { owner, repo } = github.context.repo
+const pullRequest = github.context.payload.pull_request
 const token = core.getInput('github-token')
+const clientId = core.getInput('client-id')
+const clientSecret = core.getInput('client-secret')
 const octokit = token && github.getOctokit(token)
 
 async function run() {
@@ -17,22 +20,27 @@ async function run() {
         return
     }
 
-    if (!github.context.payload.pull_request) {
+    if (!pullRequest) {
         core.warning('Requires a pull request')
         return
     }
 
-    const baseBranch = github.context.payload.pull_request.base.ref
-    const headBranch = github.context.payload.pull_request.head.ref
+    const baseBranch = pullRequest.base.ref
+    const headBranch = pullRequest.head.ref
 
     await exec('npm', ['install', '-g', '@devcycle/cli@1.0.8'])
 
-    const prLink = github.context.payload.pull_request?.html_url
+    const prLink = pullRequest?.html_url
     const prLinkArgs = prLink ? ['--pr-link', prLink] : []
 
-    const output = await getExecOutput('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`, ...prLinkArgs])
+    const authArgs = clientId && clientSecret ? ['--client-id', clientId, '--client-secret', clientSecret] : []
 
-    const pullRequestNumber = github.context.payload.pull_request?.number
+    const output = await getExecOutput(
+        'dvc',
+        ['diff', `origin/${baseBranch}...origin/${headBranch}`, ...prLinkArgs, ...authArgs]
+    )
+
+    const pullRequestNumber = pullRequest.number
     const commentIdentifier = 'DevCycle Variable Changes'
 
     try {

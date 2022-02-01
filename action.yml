@@ -5,6 +5,12 @@ branding:
   color: blue
   icon: flag
 inputs:
+  client-id:
+    description: "Your DevCycle API client ID (Recommended)"
+    required: false
+  client-secret:
+    description: "Your DevCycle API client secret (Recommended)"
+    required: false
   github-token:
     description: "The GitHub token for your repo"
     required: true

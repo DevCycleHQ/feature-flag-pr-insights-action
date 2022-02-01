@@ -39,10 +39,12 @@ const github = __importStar(__nccwpck_require__(5438));
 const core = __importStar(__nccwpck_require__(2186));
 const exec_1 = __nccwpck_require__(1514);
 const { owner, repo } = github.context.repo;
+const pullRequest = github.context.payload.pull_request;
 const token = core.getInput('github-token');
+const clientId = core.getInput('client-id');
+const clientSecret = core.getInput('client-secret');
 const octokit = token && github.getOctokit(token);
 function run() {
-    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         if (!token) {
             core.setFailed('Missing github token');
@@ -52,17 +54,18 @@ function run() {
             core.setFailed('No octokit client');
             return;
         }
-        if (!github.context.payload.pull_request) {
+        if (!pullRequest) {
             core.warning('Requires a pull request');
             return;
         }
-        const baseBranch = github.context.payload.pull_request.base.ref;
-        const headBranch = github.context.payload.pull_request.head.ref;
+        const baseBranch = pullRequest.base.ref;
+        const headBranch = pullRequest.head.ref;
         yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@1.0.8']);
-        const prLink = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.html_url;
+        const prLink = pullRequest === null || pullRequest === void 0 ? void 0 : pullRequest.html_url;
         const prLinkArgs = prLink ? ['--pr-link', prLink] : [];
-        const output = yield (0, exec_1.getExecOutput)('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`, ...prLinkArgs]);
-        const pullRequestNumber = (_b = github.context.payload.pull_request) === null || _b === void 0 ? void 0 : _b.number;
+        const authArgs = clientId && clientSecret ? ['--client-id', clientId, '--client-secret', clientSecret] : [];
+        const output = yield (0, exec_1.getExecOutput)('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`, ...prLinkArgs, ...authArgs]);
+        const pullRequestNumber = pullRequest.number;
         const commentIdentifier = 'DevCycle Variable Changes';
         try {
             const existingComments = yield octokit.rest.issues.listComments({
