@@ -5,6 +5,9 @@ branding:
   color: blue
   icon: flag
 inputs:
+  project-key:
+    description: "Your DevCycle project key (Recommended)"
+    required: false
   client-id:
     description: "Your DevCycle API client ID (Recommended)"
     required: false

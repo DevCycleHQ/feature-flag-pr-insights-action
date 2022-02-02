@@ -41,6 +41,7 @@ const exec_1 = __nccwpck_require__(1514);
 const { owner, repo } = github.context.repo;
 const pullRequest = github.context.payload.pull_request;
 const token = core.getInput('github-token');
+const projectKey = core.getInput('project-key');
 const clientId = core.getInput('client-id');
 const clientSecret = core.getInput('client-secret');
 const octokit = token && github.getOctokit(token);
@@ -63,7 +64,9 @@ function run() {
         yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@1.0.8']);
         const prLink = pullRequest === null || pullRequest === void 0 ? void 0 : pullRequest.html_url;
         const prLinkArgs = prLink ? ['--pr-link', prLink] : [];
-        const authArgs = clientId && clientSecret ? ['--client-id', clientId, '--client-secret', clientSecret] : [];
+        const authArgs = projectKey && clientId && clientSecret
+            ? ['--project', projectKey, '--client-id', clientId, '--client-secret', clientSecret]
+            : [];
         const output = yield (0, exec_1.getExecOutput)('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`, ...prLinkArgs, ...authArgs]);
         const pullRequestNumber = pullRequest.number;
         const commentIdentifier = 'DevCycle Variable Changes';

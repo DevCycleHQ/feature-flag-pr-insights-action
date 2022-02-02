@@ -5,6 +5,7 @@ import {exec, getExecOutput} from '@actions/exec'
 const { owner, repo } = github.context.repo
 const pullRequest = github.context.payload.pull_request
 const token = core.getInput('github-token')
+const projectKey = core.getInput('project-key')
 const clientId = core.getInput('client-id')
 const clientSecret = core.getInput('client-secret')
 const octokit = token && github.getOctokit(token)
@@ -33,7 +34,9 @@ async function run() {
     const prLink = pullRequest?.html_url
     const prLinkArgs = prLink ? ['--pr-link', prLink] : []
 
-    const authArgs = clientId && clientSecret ? ['--client-id', clientId, '--client-secret', clientSecret] : []
+    const authArgs = projectKey && clientId && clientSecret
+        ? ['--project', projectKey, '--client-id', clientId, '--client-secret', clientSecret]
+        : []
 
     const output = await getExecOutput(
         'dvc',
