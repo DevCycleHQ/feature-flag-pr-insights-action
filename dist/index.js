@@ -61,13 +61,13 @@ function run() {
         }
         const baseBranch = pullRequest.base.ref;
         const headBranch = pullRequest.head.ref;
-        yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@1.0.8']);
+        yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@2.0.1']);
         const prLink = pullRequest === null || pullRequest === void 0 ? void 0 : pullRequest.html_url;
         const prLinkArgs = prLink ? ['--pr-link', prLink] : [];
         const authArgs = projectKey && clientId && clientSecret
             ? ['--project', projectKey, '--client-id', clientId, '--client-secret', clientSecret]
             : [];
-        const output = yield (0, exec_1.getExecOutput)('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`, ...prLinkArgs, ...authArgs]);
+        const output = yield (0, exec_1.getExecOutput)('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`, '--format', 'markdown', ...prLinkArgs, ...authArgs]);
         const pullRequestNumber = pullRequest.number;
         const commentIdentifier = 'DevCycle Variable Changes';
         try {

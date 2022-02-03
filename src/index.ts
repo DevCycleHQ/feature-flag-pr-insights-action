@@ -29,7 +29,7 @@ async function run() {
     const baseBranch = pullRequest.base.ref
     const headBranch = pullRequest.head.ref
 
-    await exec('npm', ['install', '-g', '@devcycle/cli@1.0.8'])
+    await exec('npm', ['install', '-g', '@devcycle/cli@2.0.1'])
 
     const prLink = pullRequest?.html_url
     const prLinkArgs = prLink ? ['--pr-link', prLink] : []
@@ -40,7 +40,7 @@ async function run() {
 
     const output = await getExecOutput(
         'dvc',
-        ['diff', `origin/${baseBranch}...origin/${headBranch}`, ...prLinkArgs, ...authArgs]
+        ['diff', `origin/${baseBranch}...origin/${headBranch}`, '--format', 'markdown', ...prLinkArgs, ...authArgs]
     )
 
     const pullRequestNumber = pullRequest.number
