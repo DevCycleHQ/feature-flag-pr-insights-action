@@ -5,7 +5,7 @@ Note: This is intended for `pull_request` workflow events
 
 ## Example Output
 
-<img src="./example_ouput.png" alt="Example Output" height="600px" />
+![Example Output](https://raw.githubusercontent.com/DevCycleHQ/feature-flag-pr-insights-action/main/example_output.png)
 
 ## Usage
 Create a new Actions workflow in your GitHub repository (e.g. devcycle-insights.yml) in the .github/workflows directory. In your new file, paste the following code:
