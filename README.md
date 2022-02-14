@@ -1,13 +1,13 @@
-# Overview
+## Overview
 With this Github action, information on which [DevCycle](https://devcycle.com/) features have been added or removed in a code change will be shown directly on each Pull Request as a comment.
 
 Note: This is intended for `pull_request` workflow events
 
-## Example Output
+### Example Output
 
 ![Example Output](https://raw.githubusercontent.com/DevCycleHQ/feature-flag-pr-insights-action/main/example_output.png)
 
-## Usage
+### Usage
 Create a new Actions workflow in your GitHub repository (e.g. devcycle-insights.yml) in the .github/workflows directory. In your new file, paste the following code:
 
 ```yaml
@@ -38,7 +38,7 @@ If included, the PR comment will be enriched with Feature Flag data from DevCycl
 
 When referencing your API client ID and secret, we recommend using [GitHub Secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) to store your credentials securely.
 
-## Inputs
+### Inputs
 
 | input | required | description |
 | ----- | -------- | ----------- |
@@ -47,6 +47,6 @@ When referencing your API client ID and secret, we recommend using [GitHub Secre
 | `client-id` | no | Your organization's API client ID, see [Organization Settings](https://app.devcycle.com/settings) |
 | `client-secret` | no | Your organization's API client secret, see [Organization Settings](https://app.devcycle.com/settings) |
 
-## Configuration
+### Configuration
 The patterns used to identify references to variables in your code are fully customizable.
 This action uses the [DevCycle CLI](https://github.com/DevCycleHQ/cli) under the hood, for details on how to configure the pattern matcher see the [CLI configuration](https://github.com/DevCycleHQ/cli#configuration).
