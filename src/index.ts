@@ -29,7 +29,7 @@ async function run() {
     const baseBranch = pullRequest.base.ref
     const headBranch = pullRequest.head.ref
 
-    await exec('npm', ['install', '-g', '@devcycle/cli@2.0.2'])
+    await exec('npm', ['install', '-g', 'https://github.com/DevCycleHQ/cli/tarball/darkmode-icon'])
 
     const prLink = pullRequest?.html_url
     const prLinkArgs = prLink ? ['--pr-link', prLink] : []
