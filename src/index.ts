@@ -40,7 +40,7 @@ async function run() {
 
     const output = await getExecOutput(
         'dvc',
-        ['diff', `origin/${baseBranch}...origin/${headBranch}`, '--format', 'markdown', ...prLinkArgs, ...authArgs]
+        ['diff', `origin/${baseBranch}...origin/${headBranch}`, '--format', 'markdown', ...prLinkArgs, ...authArgs, '--caller', 'github.pr_insights']
     )
 
     const pullRequestNumber = pullRequest.number
