@@ -56,7 +56,7 @@ function run() {
             return;
         }
         if (!pullRequest) {
-            core.warning('Requires a pull request');
+            core.warning('Requires the pull request');
             return;
         }
         const baseBranch = pullRequest.base.ref;

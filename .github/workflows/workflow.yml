@@ -1,4 +1,4 @@
-on: [pull_request]
+on: [pull_request, push]
 
 jobs:
   dvc-variable-diff:
@@ -8,7 +8,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: ./
+      - uses: DevCycleHQ/feature-flag-pr-insights-action@DVC-6760-add-dvc-referrer-headers
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           client-id: ${{ secrets.DVC_CLIENT_ID }}
