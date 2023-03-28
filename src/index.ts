@@ -9,6 +9,7 @@ const projectKey = core.getInput('project-key')
 const clientId = core.getInput('client-id')
 const clientSecret = core.getInput('client-secret')
 const octokit = token && github.getOctokit(token)
+const callerString = 'github.pr_insights'
 
 async function run() {
     if (!token) {
@@ -29,7 +30,7 @@ async function run() {
     const baseBranch = pullRequest.base.ref
     const headBranch = pullRequest.head.ref
 
-    await exec('npm', ['install', '-g', '@devcycle/cli@4.2.8'])
+    await exec('npm', ['install', '-g', '@devcycle/cli@4.2.10'])
 
     const prLink = pullRequest?.html_url
     const prLinkArgs = prLink ? ['--pr-link', prLink] : []
@@ -37,10 +38,11 @@ async function run() {
     const authArgs = projectKey && clientId && clientSecret
         ? ['--project', projectKey, '--client-id', clientId, '--client-secret', clientSecret]
         : []
+    const callerArgs = ['--caller', callerString]
 
     const output = await getExecOutput(
         'dvc',
-        ['diff', `origin/${baseBranch}...origin/${headBranch}`, '--format', 'markdown', ...prLinkArgs, ...authArgs, '--caller', 'github.pr_insights']
+        ['diff', `origin/${baseBranch}...origin/${headBranch}`, '--format', 'markdown', ...prLinkArgs, ...authArgs, ...callerArgs]
     )
 
     const pullRequestNumber = pullRequest.number
