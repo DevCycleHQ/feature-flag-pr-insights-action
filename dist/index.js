@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 4822:
+/***/ 9139:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -35,19 +35,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.run = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 const core = __importStar(__nccwpck_require__(2186));
 const exec_1 = __nccwpck_require__(1514);
-const { owner, repo } = github.context.repo;
-const pullRequest = github.context.payload.pull_request;
-const token = core.getInput('github-token');
-const projectKey = core.getInput('project-key');
-const clientId = core.getInput('client-id');
-const clientSecret = core.getInput('client-secret');
-const octokit = token && github.getOctokit(token);
-const callerString = 'github.pr_insights';
+const DVC_INDENTIFIER = 'github.pr_insights';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        const { owner, repo } = github.context.repo;
+        const pullRequest = github.context.payload.pull_request;
+        const token = core.getInput('github-token');
+        const projectKey = core.getInput('project-key');
+        const clientId = core.getInput('client-id');
+        const clientSecret = core.getInput('client-secret');
+        const octokit = token && github.getOctokit(token);
         if (!token) {
             core.setFailed('Missing github token');
             return;
@@ -68,8 +69,13 @@ function run() {
         const authArgs = projectKey && clientId && clientSecret
             ? ['--project', projectKey, '--client-id', clientId, '--client-secret', clientSecret]
             : [];
-        const callerArgs = ['--caller', callerString];
-        const output = yield (0, exec_1.getExecOutput)('dvc', ['diff', `origin/${baseBranch}...origin/${headBranch}`, '--format', 'markdown', ...prLinkArgs, ...authArgs, ...callerArgs]);
+        const output = yield (0, exec_1.getExecOutput)('dvc', [
+            'diff', `origin/${baseBranch}...origin/${headBranch}`,
+            '--format', 'markdown',
+            '--caller', DVC_INDENTIFIER,
+            ...prLinkArgs,
+            ...authArgs
+        ]);
         const pullRequestNumber = pullRequest.number;
         const commentIdentifier = 'DevCycle Variable Changes';
         try {
@@ -104,7 +110,7 @@ function run() {
         }
     });
 }
-run();
+exports.run = run;
 
 
 /***/ }),
@@ -9864,12 +9870,18 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(4822);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+var exports = __webpack_exports__;
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const action_1 = __nccwpck_require__(9139);
+(0, action_1.run)();
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
