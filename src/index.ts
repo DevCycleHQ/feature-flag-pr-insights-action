@@ -22,7 +22,7 @@ async function run() {
     }
 
     if (!pullRequest) {
-        core.warning('Requires the pull request')
+        core.warning('Requires a pull request')
         return
     }
 
