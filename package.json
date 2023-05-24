@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
+  "engines": {
+    "node": "^16.0.0"
+  },
   "scripts": {
     "prepare": "husky install",
     "build": "yarn install && tsc && yarn ncc build",
