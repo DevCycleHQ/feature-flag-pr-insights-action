@@ -78,6 +78,7 @@ function run() {
         ]);
         const pullRequestNumber = pullRequest.number;
         const commentIdentifier = 'DevCycle Variable Changes';
+        const hasChanges = /0 Variables Added.*0 Variables Removed/gs.test(output.stdout);
         try {
             const existingComments = yield octokit.rest.issues.listComments({
                 owner,
@@ -86,6 +87,16 @@ function run() {
             });
             const commentToUpdate = existingComments === null || existingComments === void 0 ? void 0 : existingComments.data.find((comment) => (comment.user.login === 'github-actions[bot]' &&
                 comment.body.includes(commentIdentifier)));
+            if (!hasChanges) {
+                if (commentToUpdate) {
+                    yield octokit.rest.issues.deleteComment({
+                        owner,
+                        repo,
+                        comment_id: commentToUpdate.id
+                    });
+                }
+                return;
+            }
             const commentBody = `${output.stdout} \n\n Last Updated: ${(new Date()).toUTCString()}`;
             if (commentToUpdate) {
                 yield octokit.rest.issues.updateComment({

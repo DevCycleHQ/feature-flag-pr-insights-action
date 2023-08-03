@@ -53,6 +53,7 @@ export async function run() {
 
     const pullRequestNumber = pullRequest.number
     const commentIdentifier = 'DevCycle Variable Changes'
+    const hasChanges = /0 Variables Added.*0 Variables Removed/gs.test(output.stdout)
 
     try {
         const existingComments = await octokit.rest.issues.listComments({
@@ -65,6 +66,17 @@ export async function run() {
             comment.user.login === 'github-actions[bot]' &&
             comment.body.includes(commentIdentifier)
         ))
+
+        if (!hasChanges) {
+            if (commentToUpdate) {
+                await octokit.rest.issues.deleteComment({
+                    owner,
+                    repo,
+                    comment_id: commentToUpdate.id
+                })
+            }
+            return
+        }
 
         const commentBody = `${output.stdout} \n\n Last Updated: ${(new Date()).toUTCString()}`
         if (commentToUpdate) {
