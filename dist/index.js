@@ -48,6 +48,7 @@ function run() {
         const projectKey = core.getInput('project-key');
         const clientId = core.getInput('client-id');
         const clientSecret = core.getInput('client-secret');
+        const onlyCommentOnChange = core.getInput('only-comment-on-change');
         const octokit = token && github.getOctokit(token);
         if (!token) {
             core.setFailed('Missing github token');
@@ -63,7 +64,7 @@ function run() {
         }
         const baseBranch = pullRequest.base.ref;
         const headBranch = pullRequest.head.ref;
-        yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@4.3.0']);
+        yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@5.7.0']);
         const prLink = pullRequest === null || pullRequest === void 0 ? void 0 : pullRequest.html_url;
         const prLinkArgs = prLink ? ['--pr-link', prLink] : [];
         const authArgs = projectKey && clientId && clientSecret
@@ -86,6 +87,17 @@ function run() {
             });
             const commentToUpdate = existingComments === null || existingComments === void 0 ? void 0 : existingComments.data.find((comment) => (comment.user.login === 'github-actions[bot]' &&
                 comment.body.includes(commentIdentifier)));
+            const noChanges = output.stdout.includes('No DevCycle Variables Changed');
+            if (noChanges && onlyCommentOnChange) {
+                if (commentToUpdate) {
+                    yield octokit.rest.issues.deleteComment({
+                        owner,
+                        repo,
+                        comment_id: commentToUpdate.id
+                    });
+                }
+                return;
+            }
             const commentBody = `${output.stdout} \n\n Last Updated: ${(new Date()).toUTCString()}`;
             if (commentToUpdate) {
                 yield octokit.rest.issues.updateComment({
