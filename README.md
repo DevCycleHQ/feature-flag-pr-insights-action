@@ -46,6 +46,7 @@ When referencing your API client ID and secret, we recommend using [GitHub Secre
 | `project-key` | no | Your DevCycle project key, see [Projects](https://app.devcycle.com/settings/projects) |
 | `client-id` | no | Your organization's API client ID, see [Organization Settings](https://app.devcycle.com/settings) |
 | `client-secret` | no | Your organization's API client secret, see [Organization Settings](https://app.devcycle.com/settings) |
+| `only-comment-on-change` | no | If true, comments will only be added to PRs when changes to DevCycle variables are detected. Defaults to false.
 
 ### Configuration
 The patterns used to identify references to variables in your code are fully customizable.

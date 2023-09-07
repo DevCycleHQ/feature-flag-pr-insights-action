@@ -36,7 +36,8 @@ describe('run', () => {
             issues: {
                 listComments: jest.fn(),
                 updateComment: jest.fn(),
-                createComment: jest.fn()
+                createComment: jest.fn(),
+                deleteComment: jest.fn()
             }
         }
         github.getOctokit = jest.fn().mockReturnValue(octokit)
@@ -175,6 +176,47 @@ describe('run', () => {
             body: expect.stringContaining('Last Updated')
         })
         expect(octokit.rest.issues.createComment).not.toBeCalled()
+    })
+
+    it('PR comment is not created if no changes exist and only-comment-on-change is true', async () => {
+        const inputs: Record<string, string | boolean> = { ...mockInputs, 'only-comment-on-change': true }
+        core.getInput = jest.fn().mockImplementation((key) => inputs[key])
+
+        const cliOutput = '\nNo DevCycle Variables Changed\n'
+        exec.getExecOutput = jest.fn().mockResolvedValue({ stdout: cliOutput })
+
+
+        octokit.rest.issues.listComments = jest.fn().mockReturnValue({ data: [] })
+
+        await action.run()
+
+        expect(octokit.rest.issues.deleteComment).not.toBeCalled()
+        expect(octokit.rest.issues.updateComment).not.toBeCalled()
+        expect(octokit.rest.issues.createComment).not.toBeCalled()
+    })
+
+    it('PR comment is removed if no changes exist and only-comment-on-change is true', async () => {
+        const inputs: Record<string, string | boolean> = { ...mockInputs, 'only-comment-on-change': true }
+        core.getInput = jest.fn().mockImplementation((key) => inputs[key])
+
+        const cliOutput = '\nNo DevCycle Variables Changed\n'
+        exec.getExecOutput = jest.fn().mockResolvedValue({ stdout: cliOutput })
+
+
+        octokit.rest.issues.listComments = jest.fn().mockReturnValue({ data: [{
+            id: 'exisitng-comment-id',
+            user: { login: 'github-actions[bot]' },
+            body: 'DevCycle Variable Changes \n Last Updated: Wed, 29 Mar 2023 18:30:39 GMT'
+        }] })
+
+        await action.run()
+
+        expect(octokit.rest.issues.deleteComment).toBeCalledWith({
+            owner: 'mock-owner',
+            repo: 'mock-repo',
+            comment_id: 'exisitng-comment-id',
+        })
+        expect(octokit.rest.issues.updateComment).not.toBeCalled()
     })
 
     it('PR comment body includes output from CLI command', async () => {

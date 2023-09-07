@@ -11,6 +11,7 @@ export async function run() {
     const projectKey = core.getInput('project-key')
     const clientId = core.getInput('client-id')
     const clientSecret = core.getInput('client-secret')
+    const onlyCommentOnChange = core.getInput('only-comment-on-change')
     const octokit = token && github.getOctokit(token)
 
     if (!token) {
@@ -31,7 +32,7 @@ export async function run() {
     const baseBranch = pullRequest.base.ref
     const headBranch = pullRequest.head.ref
 
-    await exec('npm', ['install', '-g', '@devcycle/cli@4.3.0'])
+    await exec('npm', ['install', '-g', '@devcycle/cli@5.7.0'])
 
     const prLink = pullRequest?.html_url
     const prLinkArgs = prLink ? ['--pr-link', prLink] : []
@@ -65,6 +66,18 @@ export async function run() {
             comment.user.login === 'github-actions[bot]' &&
             comment.body.includes(commentIdentifier)
         ))
+
+        const noChanges = output.stdout.includes('No DevCycle Variables Changed')
+        if (noChanges && onlyCommentOnChange) {
+            if (commentToUpdate) {
+                await octokit.rest.issues.deleteComment({
+                    owner,
+                    repo,
+                    comment_id: commentToUpdate.id
+                })
+            }
+            return
+        }
 
         const commentBody = `${output.stdout} \n\n Last Updated: ${(new Date()).toUTCString()}`
         if (commentToUpdate) {
