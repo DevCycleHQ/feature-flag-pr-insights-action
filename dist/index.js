@@ -78,7 +78,8 @@ function run() {
             ...authArgs
         ]);
         const pullRequestNumber = pullRequest.number;
-        const commentIdentifier = 'DevCycle Variable Changes';
+        const changeIdentifier = 'DevCycle Variable Changes';
+        const noChangeIdentifier = 'No DevCycle Variables Changed';
         try {
             const existingComments = yield octokit.rest.issues.listComments({
                 owner,
@@ -86,8 +87,8 @@ function run() {
                 issue_number: pullRequestNumber,
             });
             const commentToUpdate = existingComments === null || existingComments === void 0 ? void 0 : existingComments.data.find((comment) => (comment.user.login === 'github-actions[bot]' &&
-                comment.body.includes(commentIdentifier)));
-            const noChanges = output.stdout.includes('No DevCycle Variables Changed');
+                (comment.body.includes(changeIdentifier) || comment.body.includes(noChangeIdentifier))));
+            const noChanges = output.stdout.includes(noChangeIdentifier);
             if (noChanges && onlyCommentOnChange) {
                 if (commentToUpdate) {
                     yield octokit.rest.issues.deleteComment({
