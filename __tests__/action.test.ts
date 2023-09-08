@@ -155,11 +155,14 @@ describe('run', () => {
         expect(octokit.rest.issues.updateComment).not.toBeCalled()
     })
 
-    it('PR comment is updated if a comment already exist', async () => {
+    test.each([
+        'DevCycle Variable Changes',
+        'No DevCycle Variables Changed'
+    ])('PR comment is updated if a comment already exists: %s', async (commentContent) => {
         octokit.rest.issues.listComments = jest.fn().mockReturnValue({ data: [{
             id: 'exisitng-comment-id',
             user: { login: 'github-actions[bot]' },
-            body: 'DevCycle Variable Changes \n Last Updated: Wed, 29 Mar 2023 18:30:39 GMT'
+            body: `${commentContent} \n Last Updated: Wed, 29 Mar 2023 18:30:39 GMT`
         }] })
 
         await action.run()

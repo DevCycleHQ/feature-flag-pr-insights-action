@@ -53,7 +53,8 @@ export async function run() {
     )
 
     const pullRequestNumber = pullRequest.number
-    const commentIdentifier = 'DevCycle Variable Changes'
+    const changeIdentifier = 'DevCycle Variable Changes'
+    const noChangeIdentifier = 'No DevCycle Variables Changed'
 
     try {
         const existingComments = await octokit.rest.issues.listComments({
@@ -64,10 +65,10 @@ export async function run() {
 
         const commentToUpdate = existingComments?.data.find((comment: any) => (
             comment.user.login === 'github-actions[bot]' &&
-            comment.body.includes(commentIdentifier)
+            (comment.body.includes(changeIdentifier) || comment.body.includes(noChangeIdentifier))
         ))
 
-        const noChanges = output.stdout.includes('No DevCycle Variables Changed')
+        const noChanges = output.stdout.includes(noChangeIdentifier)
         if (noChanges && onlyCommentOnChange) {
             if (commentToUpdate) {
                 await octokit.rest.issues.deleteComment({
