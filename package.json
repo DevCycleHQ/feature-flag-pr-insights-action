@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/DevCycleHQ/variable-diff-action#readme",
   "devDependencies": {
-    "@types/jest": "^29.5.6",
+    "@types/jest": "^29.5.10",
     "@types/node": "^20.8.9",
     "@vercel/ncc": "^0.36.1",
     "husky": "^7.0.4",
