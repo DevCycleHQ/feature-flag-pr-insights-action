@@ -68,7 +68,7 @@ function run() {
         }
         const baseBranch = pullRequest.base.ref;
         const headBranch = pullRequest.head.ref;
-        yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@5.14.2']);
+        yield (0, exec_1.exec)('npm', ['install', '-g', '@devcycle/cli@5.14.3']);
         const prLink = pullRequest === null || pullRequest === void 0 ? void 0 : pullRequest.html_url;
         const prLinkArgs = prLink ? ['--pr-link', prLink] : [];
         const authArgs = projectKey && clientId && clientSecret

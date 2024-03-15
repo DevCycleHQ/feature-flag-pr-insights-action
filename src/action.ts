@@ -32,7 +32,7 @@ export async function run() {
     const baseBranch = pullRequest.base.ref
     const headBranch = pullRequest.head.ref
 
-    await exec('npm', ['install', '-g', '@devcycle/cli@5.14.2'])
+    await exec('npm', ['install', '-g', '@devcycle/cli@5.14.3'])
 
     const prLink = pullRequest?.html_url
     const prLinkArgs = prLink ? ['--pr-link', prLink] : []
