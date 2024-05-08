@@ -3934,6 +3934,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"undici@npm:^6.16.0":
+  version: 6.16.0
+  resolution: "undici@npm:6.16.0"
+  checksum: 10/c9a794e83c9f49d510601389bdc1cdbd6448896de8b402562c99924d5bc0c0688dda5168e2a0c9df5b2ffe683a5af3906bd61524f230231500b42443ba82bf94
+  languageName: node
+  linkType: hard
+
 "unique-filename@npm:^3.0.0":
   version: 3.0.0
   resolution: "unique-filename@npm:3.0.0"
@@ -4015,6 +4022,7 @@ __metadata:
     ts-jest: "npm:^29.1.2"
     ts-node: "npm:^10.9.1"
     typescript: "npm:^5.2.2"
+    undici: "npm:^6.16.0"
   languageName: unknown
   linkType: soft
 
