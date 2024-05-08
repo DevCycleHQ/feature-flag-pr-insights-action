@@ -1,7 +1,7 @@
 
 name: Unit Tests
 
-on: 
+on:
   pull_request
 
 jobs:
@@ -10,5 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
+    - run: corepack enable && yarn --version
     - run: yarn install
     - run: yarn test
