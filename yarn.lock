@@ -3934,10 +3934,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^6.16.0":
-  version: 6.16.0
-  resolution: "undici@npm:6.16.0"
-  checksum: 10/c9a794e83c9f49d510601389bdc1cdbd6448896de8b402562c99924d5bc0c0688dda5168e2a0c9df5b2ffe683a5af3906bd61524f230231500b42443ba82bf94
+"undici@npm:^6.19.2":
+  version: 6.19.5
+  resolution: "undici@npm:6.19.5"
+  checksum: 10/ea7752b1f989095d940d89c7b4f17ae64f4619c946621d065ca1a49549af7d50bd461f1e1090aa8a766f6b86a092ae63587eac2bf6c7aefd3e8571b245e89f2d
   languageName: node
   linkType: hard
 
@@ -4022,7 +4022,7 @@ __metadata:
     ts-jest: "npm:^29.1.2"
     ts-node: "npm:^10.9.1"
     typescript: "npm:^5.2.2"
-    undici: "npm:^6.16.0"
+    undici: "npm:^6.19.2"
   languageName: unknown
   linkType: soft
 
