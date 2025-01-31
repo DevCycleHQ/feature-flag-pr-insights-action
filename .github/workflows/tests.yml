@@ -1,17 +1,20 @@
-
 name: Unit Tests
 
 on:
-  pull_request
+  pull_request:
+    branches:
+      - main
 
 jobs:
   run-tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-    - run: corepack enable && yarn --version
-    - run: yarn install
-    - run: yarn test
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+      - run: yarn install
+      - run: yarn test
