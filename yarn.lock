@@ -5,7 +5,7 @@ __metadata:
   version: 8
   cacheKey: 10
 
-"@actions/core@npm:^1.11.1":
+"@actions/core@npm:^1.10.1":
   version: 1.11.1
   resolution: "@actions/core@npm:1.11.1"
   dependencies:
@@ -3694,7 +3694,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^5.25.4":
+"undici@npm:^5.28.5":
   version: 5.28.5
   resolution: "undici@npm:5.28.5"
   dependencies:
@@ -3771,7 +3771,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "variable-diff-action@workspace:."
   dependencies:
-    "@actions/core": "npm:^1.11.1"
+    "@actions/core": "npm:^1.10.1"
     "@actions/exec": "npm:^1.1.1"
     "@actions/github": "npm:^6.0.0"
     "@types/jest": "npm:^29.5.11"
