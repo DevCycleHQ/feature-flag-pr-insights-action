@@ -1,0 +1,10 @@
+node_modules
+lib
+.yarn
+dist
+build
+coverage
+*.min.js
+*.bundle.js
+*.lock
+*.log 
