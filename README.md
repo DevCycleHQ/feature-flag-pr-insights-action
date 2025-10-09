@@ -30,7 +30,8 @@ jobs:
           # Your organization's DevCycle API client ID & secret
           client-id: ${{ secrets.DVC_CLIENT_ID }}
           client-secret: ${{ secrets.DVC_CLIENT_SECRET }}
-
+          # Only add a comment to the PR if there are changes to DevCycle variables
+          only-comment-on-change: true
 ```
 
 We recommend including your DevCycle API credentials and project token as inputs.
