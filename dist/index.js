@@ -62,7 +62,7 @@ function run() {
         const projectKey = core.getInput('project-key');
         const clientId = core.getInput('client-id');
         const clientSecret = core.getInput('client-secret');
-        const onlyCommentOnChange = core.getInput('only-comment-on-change');
+        const onlyCommentOnChange = core.getBooleanInput('only-comment-on-change');
         const octokit = token && github.getOctokit(token);
         if (!token) {
             core.setFailed('Missing github token');

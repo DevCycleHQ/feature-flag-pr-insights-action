@@ -32,6 +32,7 @@ describe('run', () => {
             },
         }
         core.getInput = jest.fn().mockImplementation((key) => mockInputs[key])
+        core.getBooleanInput = jest.fn().mockReturnValue(false)
         octokit.rest = {
             issues: {
                 listComments: jest.fn(),
@@ -196,11 +197,7 @@ describe('run', () => {
     )
 
     it('PR comment is not created if no changes exist and only-comment-on-change is true', async () => {
-        const inputs: Record<string, string | boolean> = {
-            ...mockInputs,
-            'only-comment-on-change': true,
-        }
-        core.getInput = jest.fn().mockImplementation((key) => inputs[key])
+        core.getBooleanInput.mockReturnValue(true)
 
         const cliOutput = '\nNo DevCycle Variables Changed\n'
         exec.getExecOutput = jest.fn().mockResolvedValue({ stdout: cliOutput })
@@ -217,11 +214,7 @@ describe('run', () => {
     })
 
     it('PR comment is removed if no changes exist and only-comment-on-change is true', async () => {
-        const inputs: Record<string, string | boolean> = {
-            ...mockInputs,
-            'only-comment-on-change': true,
-        }
-        core.getInput = jest.fn().mockImplementation((key) => inputs[key])
+        core.getBooleanInput.mockReturnValue(true)
 
         const cliOutput = '\nNo DevCycle Variables Changed\n'
         exec.getExecOutput = jest.fn().mockResolvedValue({ stdout: cliOutput })

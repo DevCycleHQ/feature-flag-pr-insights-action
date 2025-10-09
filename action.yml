@@ -5,6 +5,9 @@ branding:
   color: blue
   icon: flag
 inputs:
+  github-token:
+    description: "The GitHub token for your repo"
+    required: true
   project-key:
     description: "Your DevCycle project key (Recommended)"
     required: false
@@ -14,9 +17,9 @@ inputs:
   client-secret:
     description: "Your DevCycle API client secret (Recommended)"
     required: false
-  github-token:
-    description: "The GitHub token for your repo"
-    required: true
+  only-comment-on-change:
+    description: "If true, comments will only be added to PRs when changes to DevCycle variables are detected. Defaults to false."
+    required: false
 runs:
   using: node20
   main: dist/index.js
