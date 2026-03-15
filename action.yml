@@ -2,21 +2,21 @@ name: DevCycle Feature Flag Insights for Pull Requests
 description: Identifies changes in DevCycle Feature Flags within a PR, adds a comment to your PRs.
 author: DevCycleHQ
 branding:
-  color: blue
-  icon: flag
+    color: blue
+    icon: flag
 inputs:
-  project-key:
-    description: "Your DevCycle project key (Recommended)"
-    required: false
-  client-id:
-    description: "Your DevCycle API client ID (Recommended)"
-    required: false
-  client-secret:
-    description: "Your DevCycle API client secret (Recommended)"
-    required: false
-  github-token:
-    description: "The GitHub token for your repo"
-    required: true
+    project-key:
+        description: 'Your DevCycle project key (Recommended)'
+        required: false
+    client-id:
+        description: 'Your DevCycle API client ID (Recommended)'
+        required: false
+    client-secret:
+        description: 'Your DevCycle API client secret (Recommended)'
+        required: false
+    github-token:
+        description: 'The GitHub token for your repo'
+        required: true
 runs:
-  using: node20
-  main: dist/index.js
+    using: node24
+    main: dist/index.js

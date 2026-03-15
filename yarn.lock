@@ -1065,12 +1065,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.15.24":
-  version: 22.15.24
-  resolution: "@types/node@npm:22.15.24"
+"@types/node@npm:^24":
+  version: 24.12.0
+  resolution: "@types/node@npm:24.12.0"
   dependencies:
-    undici-types: "npm:~6.21.0"
-  checksum: 10/249f8206b2da5faf621e200757a15ca936a3d72d84fb31dfbc4021f83b577e3be591b29ba322f832790eeb5bdfa3674b8fd0a0e81059b99f129973250ab7ec04
+    undici-types: "npm:~7.16.0"
+  checksum: 10/e9dcf8a378af5a636353b6d88a6fae018504bab776410ac6b5411e29afbe601ba9d7957356556fc27268a62814ca4085974f785613482c18f739686efcd49655
   languageName: node
   linkType: hard
 
@@ -3717,10 +3717,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~6.21.0":
-  version: 6.21.0
-  resolution: "undici-types@npm:6.21.0"
-  checksum: 10/ec8f41aa4359d50f9b59fa61fe3efce3477cc681908c8f84354d8567bb3701fafdddf36ef6bff307024d3feb42c837cf6f670314ba37fc8145e219560e473d14
+"undici-types@npm:~7.16.0":
+  version: 7.16.0
+  resolution: "undici-types@npm:7.16.0"
+  checksum: 10/db43439f69c2d94cc29f75cbfe9de86df87061d6b0c577ebe9bb3255f49b22c50162a7d7eb413b0458b6510b8ca299ac7cff38c3a29fbd31af9f504bcf7fbc0d
   languageName: node
   linkType: hard
 
@@ -3803,7 +3803,7 @@ __metadata:
     "@actions/exec": "npm:^1.1.1"
     "@actions/github": "npm:^6.0.1"
     "@types/jest": "npm:^29.5.14"
-    "@types/node": "npm:^22.15.24"
+    "@types/node": "npm:^24"
     "@vercel/ncc": "npm:^0.38.3"
     husky: "npm:^9.1.7"
     jest: "npm:^29.7.0"
