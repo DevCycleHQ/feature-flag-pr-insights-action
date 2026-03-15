@@ -1,18 +1,19 @@
 on: [pull_request]
 permissions:
-  contents: read
+    contents: read
+    pull-requests: write
 
 jobs:
-  dvc-variable-diff:
-    runs-on: ubuntu-latest
-    name: Fetch DevCycle variable diff
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    dvc-variable-diff:
+        runs-on: ubuntu-latest
+        name: Fetch DevCycle variable diff
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
-      - uses: ./
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          client-id: ${{ secrets.DVC_CLIENT_ID }}
-          client-secret: ${{ secrets.DVC_CLIENT_SECRET }}
+            - uses: ./
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  client-id: ${{ secrets.DVC_CLIENT_ID }}
+                  client-secret: ${{ secrets.DVC_CLIENT_SECRET }}
