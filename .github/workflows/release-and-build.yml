@@ -33,7 +33,7 @@ jobs:
                   token: ${{ secrets.AUTOMATION_USER_TOKEN }}
 
             - name: Setup Node.js
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   node-version: '20'
             - name: Setup Yarn
@@ -69,17 +69,19 @@ jobs:
               if: github.event.inputs.draft != true
 
             - name: Push version change
+              id: push_version
               run: |
-                  git pull
+                  git pull --ff-only
                   git push -u origin main
+                  echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
               if: github.event.inputs.draft != true
             - name: Create Release
               id: create_release
               uses: DevCycleHQ/release-action/create-release@v2.3.0
               with:
                   tag: ${{ steps.prepare_release.outputs.next-release-tag }}
-                  target: ${{ github.sha }}
+                  target: ${{ steps.push_version.outputs.sha || github.sha }}
                   changelog: ${{ steps.prepare_release.outputs.changelog }}
                   github-token: ${{ secrets.AUTOMATION_USER_TOKEN }}
-                  prerelease: ${{ github.event.inputs.draft }}
+                  prerelease: ${{ github.event.inputs.prerelease }}
                   draft: ${{ github.event.inputs.draft }}
