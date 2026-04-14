@@ -1,0 +1,76 @@
+name: 'Update CLI Version'
+on:
+    repository_dispatch:
+        types: [update-cli-version]
+permissions:
+    contents: write
+    pull-requests: write
+jobs:
+    update-cli-version:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  token: ${{ secrets.AUTOMATION_USER_TOKEN }}
+                  fetch-depth: 0
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+            - name: Setup Yarn
+              run: |
+                  corepack enable
+                  corepack prepare yarn@4.13.0 --activate
+            - name: Set Git author
+              run: |
+                  git config --global user.email "foundation-admin@devcycle.com"
+                  git config --global user.name "DevCycle Automation"
+
+            - name: Update CLI version
+              run: |
+                  CLI_VERSION="${{ github.event.client_payload.version }}"
+                  CLI_VERSION="${CLI_VERSION#v}"
+                  BRANCH_NAME="update-cli-version-to-${CLI_VERSION}"
+
+                  git checkout -B "$BRANCH_NAME"
+                  sed -i "s/@devcycle\/cli@[0-9]*\.[0-9]*\.[0-9]*/@devcycle\/cli@${CLI_VERSION}/" src/action.ts
+                  echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+                  echo "CLI_VERSION=$CLI_VERSION" >> $GITHUB_ENV
+
+            - name: Install dependencies
+              shell: bash
+              run: yarn install
+
+            - name: Build project
+              shell: bash
+              run: yarn build
+
+            - name: Commit and push
+              run: |
+                  git add .
+                  if git diff --cached --quiet; then
+                      echo "No changes detected, skipping."
+                      echo "HAS_CHANGES=false" >> $GITHUB_ENV
+                      exit 0
+                  fi
+                  echo "HAS_CHANGES=true" >> $GITHUB_ENV
+                  git commit -m "chore: update CLI version to ${CLI_VERSION}"
+                  git push --force --set-upstream origin "$BRANCH_NAME"
+
+            - name: Create PR
+              if: env.HAS_CHANGES == 'true'
+              env:
+                  GH_TOKEN: ${{ secrets.AUTOMATION_USER_TOKEN }}
+              run: |
+                  EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --json number --jq '.[0].number')
+                  if [ -n "$EXISTING_PR" ]; then
+                      echo "PR #${EXISTING_PR} already exists, skipping creation."
+                      exit 0
+                  fi
+                  gh pr create \
+                    --base main \
+                    --head "$BRANCH_NAME" \
+                    --title "chore: update CLI version to ${CLI_VERSION}" \
+                    --body "This PR was automatically created by the DevCycle CLI release workflow."
